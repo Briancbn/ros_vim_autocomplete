@@ -1,50 +1,25 @@
-# -*- coding: utf-8 -*-
-
-##########################################################################
-# YouCompleteMe configuration for ROS                                    #
-# Author: Gaël Ecorchard (2015)                                          #
-#                                                                        #
-# The file requires the definition of the $ROS_WORKSPACE variable in     #
-# your shell.                                                            #
-# Name this file .ycm_extra_conf.py and place it in $ROS_WORKSPACE to    #
-# use it.                                                                #
-#                                                                        #
-# Tested with Ubuntu 14.04 and Indigo.                                   #
-#                                                                        #
-# License: CC0                                                           #
-##########################################################################
+# Copyright 2021 Chen Bainian
+# Copyright 2015 Gaël Ecorchard
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# Reference:
+#   Gist link: https://gist.github.com/galou/92a2d05dd772778f86f2
+#   Author: Gaël Ecorchard (2015)
+#   License: CC0
 
 import os
 import ycm_core
-
-
-def GetRosIncludePaths():
-    """Return a list of potential include directories
-
-    The directories are looked for in $ROS_WORKSPACE.
-    """
-    try:
-        from rospkg import RosPack
-    except ImportError:
-        return []
-    rospack = RosPack()
-    includes = []
-    includes.append(os.path.expandvars('$ROS_WORKSPACE') + '/devel/include')
-    for p in rospack.list():
-        if os.path.exists(rospack.get_path(p) + '/include'):
-            includes.append(rospack.get_path(p) + '/include')
-    for distribution in os.listdir('/opt/ros'):
-        includes.append('/opt/ros/' + distribution + '/include')
-    return includes
-
-
-def GetRosIncludeFlags():
-    includes = GetRosIncludePaths()
-    flags = []
-    for include in includes:
-        flags.append('-isystem')
-        flags.append(include)
-    return flags
 
 # These are the compilation flags that will be used in case there's no
 # compilation database set (by default, one is not set).
@@ -53,14 +28,16 @@ def GetRosIncludeFlags():
 # adding:
 #   set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 # to your CMakeLists.txt file or by once entering
-#   catkin config --cmake-args '-DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
+#   catkin config --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+# or
+#   colcon build --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 # in your shell.
 
-default_flags = [
+DEFAULT_FLAGS = [
     '-Wall',
     '-Wextra',
     '-Werror',
-    '-Wc++98-compat',
+    # '-Wc++98-compat',
     '-Wno-long-long',
     '-Wno-variadic-macros',
     '-fexceptions',
@@ -71,7 +48,7 @@ default_flags = [
     # specify a "-std=<something>".
     # For a C project, you would set this to something like 'c99' instead of
     # 'c++11'.
-    '-std=c++03',
+    '-std=c++14',
     # ...and the same thing goes for the magic -x option which specifies the
     # language that the files to be compiled are written in. This is mostly
     # relevant for c++ headers.
@@ -80,17 +57,76 @@ default_flags = [
     'c++',
     '-I',
     '.',
-
     # include third party libraries
     # '-isystem',
     # '/some/path/include',
 ]
 
-flags = default_flags + GetRosIncludeFlags()
+
+def GetWorkspaceDir():
+    """
+    Get the ROS workspace directory path.
+
+    Return this script directory is ROS_WORKSPACE is not set.
+    """
+    ws_dir = os.environ.get('ROS_WORKSPACE')
+    return os.path.dirname(os.path.abspath(__file__)) if ws_dir is None else ws_dir
 
 
-def GetCompilationDatabaseFolder(filename):
-    """Return the directory potentially containing compilation_commands.json
+def GetDefaultRosIncludePaths():
+    """
+    Return a list of potential include directories.
+
+    The directories are looked for in ros workspace.
+    This doesn't work well with the ROS 1 build configured with install.
+    """
+    ros_ver = os.environ.get('ROS_VERSION')
+    includes = []
+    # ROS 1
+    if ros_ver == '1':
+        try:
+            from rospkg import RosPack
+        except ImportError:
+            return []
+        rospack = RosPack()
+        devel_includes_path = os.path.join(GetWorkspaceDir(),
+                                           'devel', 'include')
+        if os.path.exists(devel_includes_path):
+            includes.append(devel_includes_path)
+
+        for p in rospack.list():
+            if os.path.exists(rospack.get_path(p) + '/include'):
+                includes.append(rospack.get_path(p) + '/include')
+
+        includes.append('/opt/ros/' + os.environ.get('ROS_DISTRO') + '/include')
+
+    # ROS 2
+    elif ros_ver == '2':
+        try:
+            from ros2pkg.api import get_package_names
+            from ament_index_python import get_package_prefix
+        except ImportError:
+            return []
+        for package_name in get_package_names():
+            include_path = os.path.join(get_package_prefix(package_name), 'include')
+            if os.path.exists(include_path) and include_path not in includes:
+                includes.append(include_path)
+
+    return includes
+
+
+def GetDefaultFlags():
+    includes = GetDefaultRosIncludePaths()
+    flags = DEFAULT_FLAGS
+    for include in includes:
+        flags.append('-isystem')
+        flags.append(include)
+    return flags
+
+
+def GetCompileCommandsPath(filename):
+    """
+    Return the directory potentially containing `compilation_commands.json`.
 
     Return the absolute path to the folder (NOT the file!) containing the
     compile_commands.json file to use that instead of 'flags'. See here for
@@ -98,32 +134,23 @@ def GetCompilationDatabaseFolder(filename):
     The compilation_commands.json for the given file is returned by getting
     the package the file belongs to.
     """
+    # Find the corresponding ROS package name for the file.
+    # This function works in both ROS1 and ROS2
     try:
-        import rospkg
+        from rospkg import get_package_name
     except ImportError:
         return ''
-    pkg_name = rospkg.get_package_name(filename)
+    pkg_name = get_package_name(filename)
     if not pkg_name:
         return ''
-    dir = (os.path.expandvars('$ROS_WORKSPACE') +
-           os.path.sep +
-           'build' +
-           os.path.sep +
-           pkg_name)
 
-    return dir
+    return os.path.join(GetWorkspaceDir(), 'build', pkg_name)
 
 
 def GetDatabase(compilation_database_folder):
     if os.path.exists(compilation_database_folder):
         return ycm_core.CompilationDatabase(compilation_database_folder)
     return None
-
-SOURCE_EXTENSIONS = ['.cpp', '.cxx', '.cc', '.c', '.m', '.mm']
-
-
-def DirectoryOfThisScript():
-    return os.path.dirname(os.path.abspath(__file__))
 
 
 def MakeRelativePathsInFlagsAbsolute(flags, working_directory):
@@ -155,99 +182,31 @@ def MakeRelativePathsInFlagsAbsolute(flags, working_directory):
     return new_flags
 
 
-def IsHeaderFile(filename):
-    extension = os.path.splitext(filename)[1]
-    return extension in ['.h', '.hxx', '.hpp', '.hh']
+def Settings(**kwargs):
+    if kwargs['language'] != 'cfamily':
+        return {}
 
+    filename = kwargs['filename']
+    flags = []
+    database_dir = GetCompileCommandsPath(filename)
 
-def GetCompilationInfoForHeaderSameDir(headerfile, database):
-    """Return compile flags for src file with same base in the same directory
-    """
-    filename_no_ext = os.path.splitext(headerfile)[0]
-    for extension in SOURCE_EXTENSIONS:
-        replacement_file = filename_no_ext + extension
-        if os.path.exists(replacement_file):
-            compilation_info = database.GetCompilationInfoForFile(
-                replacement_file)
-            if compilation_info.compiler_flags_:
-                return compilation_info
-    return None
-
-
-def GetCompilationInfoForHeaderRos(headerfile, database):
-    """Return the compile flags for the corresponding src file in ROS
-
-    Return the compile flags for the source file corresponding to the header
-    file in the ROS where the header file is.
-    """
-    try:
-        import rospkg
-    except ImportError:
-        return None
-    pkg_name = rospkg.get_package_name(headerfile)
-    if not pkg_name:
-        return None
-    try:
-        pkg_path = rospkg.RosPack().get_path(pkg_name)
-    except rospkg.ResourceNotFound:
-        return None
-    filename_no_ext = os.path.splitext(headerfile)[0]
-    hdr_basename_no_ext = os.path.basename(filename_no_ext)
-    for path, dirs, files in os.walk(pkg_path):
-        for src_filename in files:
-            src_basename_no_ext = os.path.splitext(src_filename)[0]
-            if hdr_basename_no_ext != src_basename_no_ext:
-                continue
-            for extension in SOURCE_EXTENSIONS:
-                if src_filename.endswith(extension):
-                    compilation_info = database.GetCompilationInfoForFile(
-                        path + os.path.sep + src_filename)
-                    if compilation_info.compiler_flags_:
-                        return compilation_info
-    return None
-
-
-def GetCompilationInfoForFile(filename, database):
-    # The compilation_commands.json file generated by CMake does not have
-    # entries for header files. So we do our best by asking the db for flags
-    # for a corresponding source file, if any. If one exists, the flags for
-    # that file should be good enough.
-    # Corresponding source file are looked for in the same package.
-    if IsHeaderFile(filename):
-        # Look in the same directory.
-        compilation_info = GetCompilationInfoForHeaderSameDir(
-            filename, database)
-        if compilation_info:
-            return compilation_info
-        # Look in the package.
-        compilation_info = GetCompilationInfoForHeaderRos(filename, database)
-        if compilation_info:
-            return compilation_info
-    return database.GetCompilationInfoForFile(filename)
-
-
-def FlagsForFile(filename):
-    database = GetDatabase(GetCompilationDatabaseFolder(filename))
-    if database:
-        # Bear in mind that compilation_info.compiler_flags_ does NOT return a
-        # python list, but a "list-like" StringVec object
-        compilation_info = GetCompilationInfoForFile(filename, database)
-        if not compilation_info:
-            # Return the default flags defined above.
-            return {
-                'flags': flags,
-                'do_cache': True,
-            }
-
-        final_flags = MakeRelativePathsInFlagsAbsolute(
-            compilation_info.compiler_flags_,
-            compilation_info.compiler_working_dir_)
-        final_flags += default_flags
-    else:
-        relative_to = DirectoryOfThisScript()
-        final_flags = MakeRelativePathsInFlagsAbsolute(flags, relative_to)
+    if os.path.exists(database_dir):
+        # Load the compile_commands.json file
+        database = ycm_core.CompilationDatabase(database_dir)
+        if database:
+            # Bear in mind that compilation_info.compiler_flags_ does NOT return a
+            # python list, but a "list-like" StringVec object
+            compilation_info = database.GetCompilationInfoForFile(filename)
+            if not compilation_info:
+                flags = GetDefaultFlags()  # Use default flags if there are any loading error.
+            else:
+                flags = MakeRelativePathsInFlagsAbsolute(
+                    compilation_info.compiler_flags_,
+                    compilation_info.compiler_working_dir_)
+    if not flags:
+        flags = GetDefaultFlags()  # Use default flags if there is no flags defined.
 
     return {
-        'flags': final_flags,
+        'flags': flags,
         'do_cache': True
     }
