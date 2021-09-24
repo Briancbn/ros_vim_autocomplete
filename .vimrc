@@ -8,4 +8,4 @@ let g:ycm_max_diagnostics_to_display = 0  " Reference: https://github.com/ycm-co
 
 " YCM Error & Warning Color Scheme
 hi YcmErrorSection ctermbg=0 cterm=underline
-hi YcmWarningSection ctermbg=220 guibg=#ffaf5f
+hi YcmWarningSection ctermbg=0 cterm=underline
