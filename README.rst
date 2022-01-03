@@ -2,23 +2,8 @@
 ROS / ROS2 VIM Auto-Completion With YouCompleteMe
 =================================================
 
-* `Install YouCompleteMe <install-ycm_>`_
-
-  * `Ubuntu <install-ycm-ubuntu_>`_
-
-  * Windows
-
-* Setup ROS Workspace
-
-* Other tools
-
-  * tabnine
-
-  * colcon-ed & colcon-cd
-
-  * ros_src_tools
-
-* Contributing
+.. contents:: Table of Contents
+   :depth: 2
 
 .. _install-ycm:
 
