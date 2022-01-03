@@ -45,11 +45,11 @@ Install Vundle
 
 #. **Setup** `Vundle <https://github.com/VundleVim/Vundle.vim>`_
 
-  Simply clone the repository into the ``~/.vim/bundle`` directory.
+   Simply clone the repository into the ``~/.vim/bundle`` directory.
 
-  .. code:: bash
+   .. code:: bash
 
-     git clone https://github.com/VundleVim/Vundle.vim.git \
+      git clone https://github.com/VundleVim/Vundle.vim.git \
                 ~/.vim/bundle/Vundle.vim
 
 #. **Enable Vundle**
@@ -58,7 +58,6 @@ Install Vundle
    If this file does not exist, create a new empty file under the same name with the following content.
 
    .. code:: vim
-      :linenos:
 
       set nocompatible              " be iMproved, required
       filetype off                  " required
