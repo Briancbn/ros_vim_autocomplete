@@ -80,9 +80,9 @@ Install YCM
    For more information on the system requirement on Ubuntu,
    please reference `the official documentation`__.
 
-.. __: https://github.com/ycm-core/YouCompleteMe#requirements
+   .. __: https://github.com/ycm-core/YouCompleteMe#requirements
 
-#. **Basic Installtion**
+#. **Basic Installation**
 
    Add the following line into your the **Vundle** plugin part ``~/.vimrc``.
 
@@ -126,7 +126,12 @@ Install YCM
 
    For autocompletion with ROS, the ``--clang-completer`` option needs to be enable.
 
-   Check out the official instructions for how to configure more completer options such as Java, go etc.
+   Check out the official instructions for `how to configure more completer options`__,
+   such as Java, go etc.
+
+   .. __: https://github.com/ycm-core/YouCompleteMe#general-semantic-completion
+
+#. **Installation Validation**
 
    After the compilation is completed, you should be able to test it with an empty ``.py`` file.
 
@@ -134,3 +139,97 @@ Install YCM
    Upon successful installation you should get a similar result as the below image.
 
    .. image:: ./resource/ycm-successful-installation.png
+
+   Skip to `customization <ycm-customization_>`_ and `ROS Configuration <ycm-ros-configuration_>`_ section if you primarily using the Windows YCM installation.
+
+.. _install-ycm-windows:
+
+Windows
+=======
+
+WIP
+
+
+.. _ycm-ros-configuration:
+
+-----------------
+ROS Configuration
+-----------------
+
+No additional configuration is needed for **Python**,
+as long as the library is included in the library ``PATH``.
+
+However, for **C++**, additional compilation flags need to be passed to YCM.
+This can be done through the ``compile_commands.json`` file, 
+which can be generated at compilation time.
+
+But catkin/colcon generate this file in the ``<path-to-workspace>/build`` directory,
+and an additional `Python script`__ is needed to instruct YCM to look for the file in the correct directories.
+
+.. __: .ycm_extra_conf.py
+
+So first, navigate to the ROS workspace,
+which should contain the ``build``, ``src`` and ``install`` folders,
+and download the extra configuration.
+Do remember to source the necessary dependencies or other workspaces if needed.
+
+.. code:: bash
+
+   cd <path-to-workspace>/
+   curl -O https://raw.githubusercontent.com/Briancbn/ros_vim_autocomplete/master/.ycm_extra_conf.py
+
+Next, based on the ROS builder tool that is used, use the following instructions to generate the ``compile_commands.json`` file.
+
+CATKIN
+======
+
+If you are using ``catkin_make``, use the following command to generate and update the ``compile_commands.json`` file.
+
+.. code:: bash
+
+   catkin_make \
+     -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+
+If you are using ``catkin-tools``, you can configure the additional CMake arguments using the ``catkin config`` command.
+
+.. code:: bash
+
+   catkin config --cmake-args \
+     -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+
+and run ``catkin build`` again to generate the ``compile_commands.json`` file.
+
+COLCON
+======
+
+Use the following command to generate and update the ``compile_commands.json`` file.
+
+.. code:: bash
+
+   colcon build --cmake-args \
+     -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+
+Validation
+==========
+
+Use ``vim`` to open a ROS / ROS2 ``.cpp`` or ``.hpp`` file,
+you should be able to see something similar to the following image.
+
+.. image:: ./resource/ycm-ros-successful-ros-configuration.png
+
+If you are not satisfied with the default style for the warning or the completion, 
+check out the `customization <ycm-customization_>`_ section.
+
+Also checkout the `other tools <ycm-other-tools_>`_, for guide on further speeding up your development with **VIM**.
+
+.. _ycm-customization:
+
+-------------
+Customization
+-------------
+
+.. _ycm-other-tools:
+
+-----------
+Other Tools
+-----------
