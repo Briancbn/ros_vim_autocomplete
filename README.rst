@@ -217,7 +217,7 @@ you should be able to see something similar to the following image.
 
 .. image:: ./resource/ycm-ros-successful-ros-configuration.png
 
-If you are not satisfied with the default style for the warning or the completion, 
+If you are not satisfied with the default style for the warning or the completion,
 check out the `customization <ycm-customization_>`_ section.
 
 Also checkout the `other tools <ycm-other-tools_>`_, for guide on further speeding up your development with **VIM**.
@@ -227,6 +227,82 @@ Also checkout the `other tools <ycm-other-tools_>`_, for guide on further speedi
 -------------
 Customization
 -------------
+
+Add in the following line to the end of the ``.vimrc`` file.
+Below is my personal configuration
+
+.. code:: vim
+
+   " YCM settings
+   let g:ycm_max_num_candidates = 5
+   let g:ycm_warning_symbol = '>'
+   let g:ycm_confirm_extra_conf = 0
+   let g:ycm_add_preview_to_completeopt = 1
+   let g:ycm_autoclose_preview_window_after_completion = 1
+   let g:ycm_max_diagnostics_to_display = 0  " Reference: https://github.com/ycm-core/YouCompleteMe/issues/2392
+
+   " YCM Error & Warning Color Scheme
+   " https://jonasjacek.github.io/colors/
+   hi YcmErrorSection ctermbg=0 cterm=underline
+   hi YcmWarningSection ctermbg=0 cterm=underline
+
+   " YCM Shortcut
+   map g :YcmCompleter GoTo<CR>  " Go to definition
+
+If you configure it the same way as I did,
+you should have a similar looking style as below.
+
+.. image:: ./resource/ycm-customization.png
+
+Let's go through the customization setting line-by-line.
+
+.. code:: vim
+
+   let g:ycm_max_num_candidates = 5
+
+The number of options display in the drop down list.
+
+.. code:: vim
+
+   let g:ycm_warning_symbol = '>'
+
+The symbol used on in the left column when there is a compilation warning for the line.
+
+.. code:: vim
+
+   let g:ycm_confirm_extra_conf = 0
+
+This tells YCM to automatically load in the ``.ycm_extra_config.py`` file.
+By default, there is a prompt to ask for confirmation.
+It is rather inconvenient if you are using the ``.ycm_extra_config.py`` constantly.
+
+.. code:: vim
+
+   let g:ycm_add_preview_to_completeopt = 1
+   let g:ycm_autoclose_preview_window_after_completion = 1
+
+TODO(anyone): add explanation
+
+.. code:: vim
+
+   let g:ycm_max_diagnostics_to_display = 0
+
+This will solve the **max diagnostics exceeded** warning if encountered.
+
+.. code:: vim
+
+   hi YcmErrorSection ctermbg=0 cterm=underline
+   hi YcmWarningSection ctermbg=0 cterm=underline
+
+Change the warning and error style to transparent background -- ``ctermbg=0``,
+and underline ``cterm=underline``.
+
+.. code:: vim
+
+   map g :YcmCompleter GoTo<CR>
+
+Change the hotkey for checking definition to ``g``.
+Note that you can use ``Ctrl+o`` to go back to the original file.
 
 .. _ycm-other-tools:
 
