@@ -309,3 +309,34 @@ Note that you can use ``Ctrl+o`` to go back to the original file.
 -----------
 Other Tools
 -----------
+
+tabnine
+=======
+
+`Tabnine`__ uses AI to help you autocomplete.
+It can greatly speed up your development.
+
+.. __: https://www.tabnine.com/
+
+Tabnine maintains `a fork of YCM`__,
+you can simply replace the repository ``ycm-core/YouCompleteMe``
+in the `installation instructions <install-ycm_>`_
+with ``tabnine/YouCompleteMe``.
+Don't forget to change the **Vundle** portion in the ``.vimrc`` too.
+
+.. __: https://github.com/tabnine/YouCompleteMe
+
+After the successful installation the tabnine fork of YCM,
+run ``:YcmTabnineHub`` to enter the configuration server - Tabnine Hub like the following image.
+
+.. image:: ./resource/ycm-tabnine.png
+
+After successful configuration, you should see the tabnine suggestion in the YCM. Below is an example.
+
+.. image:: ./resource/ycm-tabnine-vim.png
+
+colcon cd & edit
+================
+
+ros_src_tool
+============
