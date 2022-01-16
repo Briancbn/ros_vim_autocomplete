@@ -1,0 +1,19 @@
+name: Style
+on: [push, pull_request]
+jobs:
+  doc8:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.8
+    - name: Install dependencies
+      run: |
+        sudo apt update
+        python -m pip install --upgrade setuptools
+        python -m pip install --upgrade doc8
+    - name: Doc8
+      run: |
+        doc8 --max-line-length 999

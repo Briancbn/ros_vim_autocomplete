@@ -160,7 +160,7 @@ No additional configuration is needed for **Python**,
 as long as the library is included in the library ``PATH``.
 
 However, for **C++**, additional compilation flags need to be passed to YCM.
-This can be done through the ``compile_commands.json`` file, 
+This can be done through the ``compile_commands.json`` file,
 which can be generated at compilation time.
 
 But catkin/colcon generate this file in the ``<path-to-workspace>/build`` directory,
