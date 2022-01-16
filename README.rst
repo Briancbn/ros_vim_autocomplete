@@ -338,5 +338,74 @@ After successful configuration, you should see the tabnine suggestion in the YCM
 colcon cd & edit
 ================
 
+The ``colcon_cd`` and ``colcon edit`` commands help quickly navigate ROS workspaces
+and trigger ``vim`` to edit the correct file.
+
+  Not all of the below functionalities work in Windows
+
+With the help of TAB completion, you will never need to use endless amount of ``cd`` and ``ls`` command to find the file that you want to edit.
+
+Installation
+------------
+
+#. **Prerequesite**
+
+   For Ubuntu, the best way is to install through debian from the APT repository.
+   If you already have ROS / ROS2 installed, you can skip this step.
+   Checkout `the official documentation`__ on how to do that.
+
+   .. __: https://colcon.readthedocs.io/en/released/user/installation.html#using-debian-packages
+
+#. **Install**
+
+   Run the following command to install ``colcon-ed`` and ``colcon-cd``.
+
+   .. code:: bash
+
+      sudo apt install python3-colcon-ed python3-colcon-cd
+
+   Note:
+
+     If you want to enable the tab completion for ``colcon-cd``,
+     please install `the debian release from my fork`__ instead.
+
+     .. __: https://github.com/Briancbn/colcon-cd/releases
+
+Usage
+-----
+
+The ``colcon_cd`` and ``colcon edit`` commands work very similar to
+the ``roscd`` and ``rosed`` commands in ROS1.
+
+To enable tab completion, please remember to source the following files,
+or simply put the following commands in your ``~/.bashrc``.
+
+.. code:: bash
+
+   if [ -f /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash ]; then
+       . /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash
+   fi
+
+   if [ -f /usr/share/colcon_cd/function/colcon_cd.sh ]; then
+       source /usr/share/colcon_cd/function/colcon_cd.sh
+   fi
+
+   # The following needs to install colcon-cd from Briancbn's fork
+   if [ -f /usr/share/colcon_cd/function/colcon_cd-argcomplete.bash ]; then
+       source /usr/share/colcon_cd/function/colcon_cd-argcomplete.bash
+   fi
+
+Checkout the official documentation for more usage information about
+`colcon edit`__
+
+.. __: https://colcon.readthedocs.io/en/released/reference/verb/edit.html
+
 ros_src_tool
 ============
+
+A Bash tool for easily and dynamically sourcing ROS and ROS2 environment.
+
+Usage
+-----
+
+.. image:: https://raw.githubusercontent.com/Briancbn/ros_src_tools/master/media/ros_src_tools_demo.gif
