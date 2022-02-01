@@ -147,7 +147,111 @@ Install YCM
 Windows
 =======
 
-WIP
+Install Vundle
+--------------
+
+Follow the `official guide`__ to install Vundle.
+
+If the latest version of ``vim`` is installed on windows,
+by default it looks for ``_vimrc`` instead of ``.vimrc`` and ``vimfiles`` instead of ``.vim``.
+
+.. __: https://github.com/VundleVim/Vundle.vim/wiki/Vundle-for-Windows
+
+For the ``git`` commands, use the following instead in the command prompt.
+
+.. code:: bash
+
+   git clone https://github.com/VundleVim/Vundle.vim.git %USERPROFILE%/vimfiles/bundle/Vundle.vim
+
+After completing the cloning, copy the following lines inside the ``_vimrc`` file, similarly to the setup in Ubuntu.
+
+.. code:: vim
+
+   filetype off
+   set shellslash
+   set rtp+=$HOME/vimfiles/bundle/Vundle.vim
+   call vundle#begin('$HOME/vimfiles/bundle')
+   " let Vundle manage Vundle, required
+   Plugin 'VundleVim/Vundle.vim'
+
+   " All of your Plugins must be added before the following line
+   call vundle#end()            " required
+   filetype plugin indent on    " required
+   " To ignore plugin indent changes, instead use:
+   "filetype plugin on
+   "
+   " Brief help
+   " :PluginList       - lists configured plugins
+   " :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
+   " :PluginSearch foo - searches for foo; append `!` to refresh local cache
+   " :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
+   "
+   " see :h vundle for more details or wiki for FAQ
+   " Put your non-Plugin stuff after this line
+
+
+Install YCM
+-----------
+
+#. **Basic Installation**
+
+   Add the following line into your the **Vundle** plugin part ``_vimrc``.
+
+   .. code:: vim
+
+      Plugin 'ycm-core/YouCompleteMe'
+
+   The complete **Vundle** plugin part in your ``_vimrc`` should looks like the following.
+
+   .. code:: vim
+
+      ...
+      call vundle#begin()
+      Plugin 'VundleVim/Vundle.vim'
+
+      Plugin 'ycm-core/YouCompleteMe'
+      call vundle#end()
+      ...
+
+   After adding in the above code, run ``vim`` and type in ``:PluginInstall`` command.
+   This will download the `YCM <ycm_>`_, as well as its submodules into the ``vimfiles/bundle/`` folder.
+   Alternatively, you can use,
+
+   .. code:: bash
+
+      git clone --recursive https://github.com/ycm-core/YouCompleteMe
+
+   .. _ycm: https://github.com/ycm-core/YouCompleteMe
+
+   However, additional compilation is still needed first before using YCM.
+   Otherwise you will get the following error: ::
+
+     The ycmd server SHUT DOWN (restart with ':YcmRestartServer'). YCM core library not detected; you need to compile YCM before using it. Follow the instructions in the documentation.
+
+   To compile YCM, run the following commands
+
+   .. code:: bash
+
+      cd %USERPROFILE%/vimfiles/bundle/YouCompleteMe
+      python3 install.py --clang-completer
+
+   For autocompletion with ROS, the ``--clang-completer`` option needs to be enable.
+
+   Check out the official instructions for `how to configure more completer options`__,
+   such as Java, go etc.
+
+   .. __: https://github.com/ycm-core/YouCompleteMe#general-semantic-completion
+
+#. **Installation Validation**
+
+   After the compilation is completed, you should be able to test it with an empty ``.py`` file.
+
+   The best way to test it is to try type in a file directory path.
+   Upon successful installation you should get a similar result as the below image.
+
+   .. image:: ./resource/ycm-successful-installation-windows.png
+
+   Skip to `customization <ycm-customization_>`_ and `ROS Configuration <ycm-ros-configuration_>`_ section if you primarily using the Windows YCM installation.
 
 
 .. _ycm-ros-configuration:
@@ -155,6 +259,11 @@ WIP
 -----------------
 ROS Configuration
 -----------------
+
+  The following configuration does not work in Windows.
+  For more information, checkout the discussion `here`__.
+
+  .. __: https://github.com/jacobdufault/cquery/issues/663
 
 No additional configuration is needed for **Python**,
 as long as the library is included in the library ``PATH``.
