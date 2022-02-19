@@ -14,7 +14,7 @@ Install YouCompleteMe
 I recommend installing YCM using `Vundle <https://github.com/VundleVim/Vundle.vim>`_.
 However, the installation cannot be completed through a simple ``:PluginInstall`` in vim.
 
-If you **already has Vundle installed**, skip ahead to the `Compile YCM section for Ubuntu` or `Windows`
+If you **already have Vundle installed**, please skip ahead to the `Compile YCM section for Ubuntu <compile-ycm-ubuntu_>`_ or `Windows <compile-ycm-windows_>`_
 
 .. _install-ycm-ubuntu:
 
@@ -30,7 +30,7 @@ Install Vundle
 
 #. **Setup** `Vundle <https://github.com/VundleVim/Vundle.vim>`_
 
-   Simply clone the repository into the ``~/.vim/bundle`` directory.
+   Simply clone the Vuhdle repository into the ``~/.vim/bundle`` directory.
 
    .. code:: bash
 
@@ -39,8 +39,8 @@ Install Vundle
 
 #. **Enable Vundle**
 
-   Put the following at the top of your ``~/.vimrc`` file.
-   If this file does not exist, create a new empty file under the same name with the following content.
+   Add the following lines on the top of your ``~/.vimrc`` file.
+   If this file does not exist yet, create a new empty file under the same name with the following content.
 
    .. code:: vim
 
@@ -71,6 +71,8 @@ Install Vundle
       " see :h vundle for more details or wiki for FAQ
       " Put your non-Plugin stuff after this line
 
+.. _compile-ycm-ubuntu:
+
 Install YCM
 -----------
 #. **Requirement**
@@ -84,13 +86,13 @@ Install YCM
 
 #. **Basic Installation**
 
-   Add the following line into your the **Vundle** plugin part ``~/.vimrc``.
+   Add the following line into the **Vundle** plugin part within ``~/.vimrc``.
 
    .. code:: vim
 
       Plugin 'ycm-core/YouCompleteMe'
 
-   The complete **Vundle** plugin part in your ``~/.vimrc`` should looks like the following.
+   The complete **Vundle** plugin part in the ``~/.vimrc`` should looks like the following after the modification.
 
    .. code:: vim
 
@@ -117,7 +119,7 @@ Install YCM
 
      The ycmd server SHUT DOWN (restart with ':YcmRestartServer'). YCM core library not detected; you need to compile YCM before using it. Follow the instructions in the documentation.
 
-   To compile YCM, run the following commands
+   To compile YCM, run the following commands,
 
    .. code:: bash
 
@@ -127,20 +129,20 @@ Install YCM
    For autocompletion with ROS, the ``--clang-completer`` option needs to be enable.
 
    Check out the official instructions for `how to configure more completer options`__,
-   such as Java, go etc.
+   such as Java, Go etc.
 
    .. __: https://github.com/ycm-core/YouCompleteMe#general-semantic-completion
 
 #. **Installation Validation**
 
-   After the compilation is completed, you should be able to test it with an empty ``.py`` file.
+   After the compilation is completed, you should be able to test the installation with an empty ``.py`` file.
 
-   The best way to test it is to try type in a file directory path.
-   Upon successful installation you should get a similar result as the below image.
+   The easiest way to test it is to try typing in a relative file directory path.
+   Upon successful installation, you should get a similar result as the image below.
 
    .. image:: ./resource/ycm-successful-installation.png
 
-   Skip to `customization <ycm-customization_>`_ and `ROS Configuration <ycm-ros-configuration_>`_ section if you primarily using the Windows YCM installation.
+   Skip to `customization <ycm-customization_>`_ and `ROS Configuration <ycm-ros-configuration_>`_ section if you primarily using the Ubuntu YCM installation.
 
 .. _install-ycm-windows:
 
@@ -152,18 +154,19 @@ Install Vundle
 
 Follow the `official guide`__ to install Vundle.
 
-If the latest version of ``vim`` is installed on windows,
+If the latest version of ``vim`` is installed on Windows,
 by default it looks for ``_vimrc`` instead of ``.vimrc`` and ``vimfiles`` instead of ``.vim``.
 
 .. __: https://github.com/VundleVim/Vundle.vim/wiki/Vundle-for-Windows
 
-For the ``git`` commands, use the following instead in the command prompt.
+For the ``git`` commands, use the following instead in the Command Prompt.
 
 .. code:: bash
 
    git clone https://github.com/VundleVim/Vundle.vim.git %USERPROFILE%/vimfiles/bundle/Vundle.vim
 
 After completing the cloning, copy the following lines inside the ``_vimrc`` file, similarly to the setup in Ubuntu.
+Please note the change in directory name for the vim configuration files.
 
 .. code:: vim
 
@@ -189,19 +192,20 @@ After completing the cloning, copy the following lines inside the ``_vimrc`` fil
    " see :h vundle for more details or wiki for FAQ
    " Put your non-Plugin stuff after this line
 
+.. _compile-ycm-windows:
 
 Install YCM
 -----------
 
 #. **Basic Installation**
 
-   Add the following line into your the **Vundle** plugin part ``_vimrc``.
+   Add the following line into the **Vundle** plugin part of the ``_vimrc``.
 
    .. code:: vim
 
       Plugin 'ycm-core/YouCompleteMe'
 
-   The complete **Vundle** plugin part in your ``_vimrc`` should looks like the following.
+   The complete **Vundle** plugin part in the ``_vimrc`` should looks like the following.
 
    .. code:: vim
 
@@ -235,7 +239,7 @@ Install YCM
       cd %USERPROFILE%/vimfiles/bundle/YouCompleteMe
       python3 install.py --clang-completer
 
-   For autocompletion with ROS, the ``--clang-completer`` option needs to be enable.
+   For autocompletion with ROS (WIP), the ``--clang-completer`` option needs to be enable.
 
    Check out the official instructions for `how to configure more completer options`__,
    such as Java, go etc.
@@ -246,12 +250,10 @@ Install YCM
 
    After the compilation is completed, you should be able to test it with an empty ``.py`` file.
 
-   The best way to test it is to try type in a file directory path.
-   Upon successful installation you should get a similar result as the below image.
+   The easiest way to test it is to try type in a relative file directory path.
+   Upon successful installation, you should get a similar result as the image below.
 
    .. image:: ./resource/ycm-successful-installation-windows.png
-
-   Skip to `customization <ycm-customization_>`_ and `ROS Configuration <ycm-ros-configuration_>`_ section if you primarily using the Windows YCM installation.
 
 
 .. _ycm-ros-configuration:
@@ -268,16 +270,16 @@ ROS Configuration
 No additional configuration is needed for **Python**,
 as long as the library is included in the library ``PATH``.
 
-However, for **C++**, additional compilation flags need to be passed to YCM.
+However, for **C++**, additional compilation flags need to be passed to the YCM.
 This can be done through the ``compile_commands.json`` file,
 which can be generated at compilation time.
 
-But catkin/colcon generate this file in the ``<path-to-workspace>/build`` directory,
+CATKIN/COLCON generate this file in the ``<path-to-workspace>/build`` directory which YCM cannot find automatically,
 and an additional `Python script`__ is needed to instruct YCM to look for the file in the correct directories.
 
 .. __: .ycm_extra_conf.py
 
-So first, navigate to the ROS workspace,
+First, navigate to the ROS workspace,
 which should contain the ``build``, ``src`` and ``install`` folders,
 and download the extra configuration.
 Do remember to source the necessary dependencies or other workspaces if needed.
@@ -422,7 +424,7 @@ Other Tools
 tabnine
 =======
 
-`Tabnine`__ uses AI to help you autocomplete.
+`Tabnine`__ uses AI to help with code autocompletion.
 It can greatly speed up your development.
 
 .. __: https://www.tabnine.com/
