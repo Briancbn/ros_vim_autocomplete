@@ -206,6 +206,13 @@ def Settings(**kwargs):
     if not flags:
         flags = GetDefaultFlags()  # Use default flags if there is no flags defined.
 
+    # Force std 17 if not define
+    std_exist = False
+    for flag in flags:
+        std_exist |= '-std=c++' in flag
+    if not std_exist:
+        flags += ['-std=c++17']
+
     return {
         'flags': flags,
         'do_cache': True
